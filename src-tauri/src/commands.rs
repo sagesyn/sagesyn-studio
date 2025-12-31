@@ -46,7 +46,7 @@ pub async fn compile_sag(
                 })
             }
         }
-        Err(e) => {
+        Err(_) => {
             // Compiler not found, return mock success for development
             Ok(CompileResult {
                 success: true,

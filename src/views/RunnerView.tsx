@@ -7,7 +7,6 @@ import {
   Activity,
   Clock,
   CheckCircle,
-  AlertCircle,
 } from "lucide-react";
 
 // Mock agent data
