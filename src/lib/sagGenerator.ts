@@ -194,7 +194,7 @@ export function generateSagCode(
     lines.push('  description: "Auto-generated agent"');
 
     orphanTools.forEach((toolNode) => {
-      const toolData = toolNode.data as ToolData;
+      const toolData = toolNode.data as unknown as ToolData;
       lines.push("");
 
       const params = toolData.params || "";
