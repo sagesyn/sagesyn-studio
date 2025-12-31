@@ -1,81 +1,43 @@
 @import "tailwindcss";
 
 :root {
-  /* Neon color palette */
-  --neon-cyan: #00f2fe;
-  --neon-magenta: #ff00ff;
-  --neon-orange: #ff6b35;
-  --neon-green: #00ff88;
-  --neon-purple: #bf00ff;
-
-  /* Surface colors */
-  --sage-bg: #0a0a0f;
-  --sage-surface: #12121a;
-  --sage-surface-light: #1a1a24;
-  --sage-border: #2a2a3a;
+  /* Terminal gray scale palette */
+  --term-bg: #1a1a1a;
+  --term-surface: #232323;
+  --term-surface-light: #2a2a2a;
+  --term-border: #333333;
+  --term-border-light: #444444;
 
   /* Text colors */
-  --text-primary: #f0f0f5;
-  --text-secondary: #8888aa;
-  --text-muted: #555566;
+  --text-primary: #d4d4d4;
+  --text-secondary: #888888;
+  --text-muted: #555555;
 
-  /* Glow effects */
-  --glow-cyan: 0 0 20px rgba(0, 242, 254, 0.4);
-  --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.4);
-  --glow-orange: 0 0 20px rgba(255, 107, 53, 0.4);
-  --glow-green: 0 0 20px rgba(0, 255, 136, 0.4);
+  /* Subtle accent (muted green) */
+  --term-accent: #6b9b6b;
+
+  /* Muted node colors */
+  --node-agent: #6b8b9b;
+  --node-tool: #8b6b8b;
+  --node-event: #6b9b6b;
+  --node-state: #9b8b6b;
 }
 
 body {
   margin: 0;
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-family: "JetBrains Mono", "Fira Code", "SF Mono", Consolas, monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: var(--sage-bg);
+  background: var(--term-bg);
   color: var(--text-primary);
 }
 
 /* Grid background pattern */
 .bg-grid {
   background-image:
-    linear-gradient(rgba(42, 42, 58, 0.3) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(42, 42, 58, 0.3) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-/* Neon glow utilities */
-.glow-cyan {
-  box-shadow: var(--glow-cyan);
-}
-
-.glow-magenta {
-  box-shadow: var(--glow-magenta);
-}
-
-.glow-orange {
-  box-shadow: var(--glow-orange);
-}
-
-.glow-green {
-  box-shadow: var(--glow-green);
-}
-
-/* Neon text glow */
-.text-glow-cyan {
-  text-shadow: 0 0 10px rgba(0, 242, 254, 0.8);
-}
-
-.text-glow-magenta {
-  text-shadow: 0 0 10px rgba(255, 0, 255, 0.8);
-}
-
-/* Gradient backgrounds */
-.bg-gradient-neon {
-  background: linear-gradient(135deg, rgba(0, 242, 254, 0.1), rgba(255, 0, 255, 0.1));
-}
-
-.border-gradient-neon {
-  border-image: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta)) 1;
+    linear-gradient(rgba(50, 50, 50, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(50, 50, 50, 0.4) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
 /* Custom scrollbar */
@@ -85,16 +47,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--sage-bg);
+  background: var(--term-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--sage-border);
+  background: var(--term-border);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a3a4a;
+  background: var(--term-border-light);
 }
 
 /* Monaco editor overrides */
@@ -102,50 +64,30 @@ body {
   font-family: "JetBrains Mono", "Fira Code", monospace !important;
 }
 
-/* React Flow overrides for dark neon theme */
+/* React Flow overrides for terminal theme */
 .react-flow__background {
-  background-color: var(--sage-bg) !important;
+  background-color: var(--term-bg) !important;
 }
 
 .react-flow__minimap {
-  background-color: var(--sage-surface) !important;
+  background-color: var(--term-surface) !important;
 }
 
 .react-flow__controls {
-  background-color: var(--sage-surface) !important;
-  border: 1px solid var(--sage-border) !important;
+  background-color: var(--term-surface) !important;
+  border: 1px solid var(--term-border) !important;
 }
 
 .react-flow__controls-button {
-  background-color: var(--sage-surface) !important;
-  border-color: var(--sage-border) !important;
+  background-color: var(--term-surface) !important;
+  border-color: var(--term-border) !important;
   fill: var(--text-secondary) !important;
 }
 
 .react-flow__controls-button:hover {
-  background-color: var(--sage-surface-light) !important;
+  background-color: var(--term-surface-light) !important;
 }
 
 .react-flow__edge-path {
   stroke-width: 2;
-}
-
-/* Animated glow pulse */
-@keyframes pulse-glow {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-
-.animate-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-/* Neon border animation */
-@keyframes neon-border {
-  0%, 100% { border-color: var(--neon-cyan); }
-  50% { border-color: var(--neon-magenta); }
-}
-
-.animate-neon-border {
-  animation: neon-border 3s ease-in-out infinite;
 }

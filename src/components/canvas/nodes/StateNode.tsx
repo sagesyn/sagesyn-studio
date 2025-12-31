@@ -12,35 +12,31 @@ function StateNode({ data, selected }: NodeProps) {
 
   return (
     <div
-      className={`px-4 py-3 rounded-lg border-2 min-w-[150px] backdrop-blur-sm transition-all duration-200 ${
+      className={`px-3 py-2 rounded border min-w-[130px] transition-colors ${
         selected
-          ? "border-[#ff6b35] shadow-[0_0_30px_rgba(255,107,53,0.5)]"
-          : "border-[#ff6b35]/50 shadow-[0_0_15px_rgba(255,107,53,0.2)]"
+          ? "border-[#9b8b6b] bg-[#2a2a2a]"
+          : "border-[#444] bg-[#232323] hover:border-[#555]"
       }`}
-      style={{
-        background: "linear-gradient(135deg, rgba(255,107,53,0.15) 0%, rgba(255,107,53,0.05) 100%)",
-      }}
     >
       <Handle
         type="target"
         position={Position.Left}
-        className="!w-3 !h-3 !bg-[#ff6b35] !border-2 !border-[#ff6b35]/50"
-        style={{ boxShadow: "0 0 8px rgba(255,107,53,0.6)" }}
+        className="!w-2 !h-2 !bg-[#9b8b6b] !border !border-[#444]"
       />
 
-      <div className="flex items-center gap-2 mb-2">
-        <Database className="w-4 h-4 text-[#ff6b35]" />
-        <span className="font-semibold text-white text-sm" style={{ textShadow: "0 0 10px rgba(255,107,53,0.5)" }}>
+      <div className="flex items-center gap-2 mb-1">
+        <Database className="w-3.5 h-3.5 text-[#9b8b6b]" />
+        <span className="font-medium text-[#d4d4d4] text-xs">
           {nodeData.label}
         </span>
       </div>
 
       {nodeData.fields && nodeData.fields.length > 0 && (
-        <div className="space-y-1">
+        <div className="space-y-0.5">
           {nodeData.fields.map((field, index) => (
             <div
               key={index}
-              className="text-xs text-[#ff6b35]/80 font-mono bg-[#ff6b35]/10 px-2 py-0.5 rounded border border-[#ff6b35]/20"
+              className="text-[10px] text-[#666] font-mono bg-[#1a1a1a] px-1.5 py-0.5 rounded border border-[#333]"
             >
               {field}
             </div>
@@ -51,8 +47,7 @@ function StateNode({ data, selected }: NodeProps) {
       <Handle
         type="source"
         position={Position.Right}
-        className="!w-3 !h-3 !bg-[#ff6b35] !border-2 !border-[#ff6b35]/50"
-        style={{ boxShadow: "0 0 8px rgba(255,107,53,0.6)" }}
+        className="!w-2 !h-2 !bg-[#9b8b6b] !border !border-[#444]"
       />
     </div>
   );

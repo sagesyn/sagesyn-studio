@@ -12,46 +12,40 @@ function AgentNode({ data, selected }: NodeProps) {
 
   return (
     <div
-      className={`px-4 py-3 rounded-xl border-2 min-w-[180px] backdrop-blur-sm transition-all duration-200 ${
+      className={`px-3 py-2 rounded border min-w-[160px] transition-colors ${
         selected
-          ? "border-[#00f2fe] shadow-[0_0_30px_rgba(0,242,254,0.5)]"
-          : "border-[#00f2fe]/50 shadow-[0_0_15px_rgba(0,242,254,0.2)]"
+          ? "border-[#6b8b9b] bg-[#2a2a2a]"
+          : "border-[#444] bg-[#232323] hover:border-[#555]"
       }`}
-      style={{
-        background: "linear-gradient(135deg, rgba(0,242,254,0.15) 0%, rgba(0,242,254,0.05) 100%)",
-      }}
     >
       <Handle
         type="target"
         position={Position.Top}
-        className="!w-3 !h-3 !bg-[#00f2fe] !border-2 !border-[#00f2fe]/50"
-        style={{ boxShadow: "0 0 8px rgba(0,242,254,0.6)" }}
+        className="!w-2 !h-2 !bg-[#6b8b9b] !border !border-[#444]"
       />
 
       <div className="flex items-center gap-2 mb-1">
-        <Bot className="w-5 h-5 text-[#00f2fe]" />
-        <span className="font-bold text-white" style={{ textShadow: "0 0 10px rgba(0,242,254,0.5)" }}>
+        <Bot className="w-4 h-4 text-[#6b8b9b]" />
+        <span className="font-medium text-[#d4d4d4] text-sm">
           {nodeData.label}
         </span>
       </div>
 
       {nodeData.description && (
-        <p className="text-xs text-[#00f2fe]/70">{nodeData.description}</p>
+        <p className="text-[10px] text-[#666]">{nodeData.description}</p>
       )}
 
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!w-3 !h-3 !bg-[#00f2fe] !border-2 !border-[#00f2fe]/50"
-        style={{ boxShadow: "0 0 8px rgba(0,242,254,0.6)" }}
+        className="!w-2 !h-2 !bg-[#6b8b9b] !border !border-[#444]"
       />
 
       <Handle
         type="source"
         position={Position.Right}
         id="state"
-        className="!w-3 !h-3 !bg-[#ff6b35] !border-2 !border-[#ff6b35]/50"
-        style={{ boxShadow: "0 0 8px rgba(255,107,53,0.6)" }}
+        className="!w-2 !h-2 !bg-[#9b8b6b] !border !border-[#444]"
       />
     </div>
   );

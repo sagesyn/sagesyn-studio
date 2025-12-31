@@ -6,27 +6,21 @@ import SettingsView from "./views/SettingsView";
 
 function App() {
   return (
-    <div className="flex h-screen bg-[#0a0a0f]">
+    <div className="flex h-screen bg-[#1a1a1a]">
       {/* Sidebar */}
-      <aside className="w-16 bg-[#12121a] border-r border-[#2a2a3a] flex flex-col items-center py-4 gap-2">
-        <div className="mb-4">
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg"
-            style={{
-              background: "linear-gradient(135deg, #00f2fe 0%, #ff00ff 100%)",
-              boxShadow: "0 0 20px rgba(0,242,254,0.3), 0 0 20px rgba(255,0,255,0.3)",
-            }}
-          >
+      <aside className="w-14 bg-[#232323] border-r border-[#333] flex flex-col items-center py-3 gap-1">
+        <div className="mb-3">
+          <div className="w-8 h-8 rounded bg-[#2a2a2a] border border-[#444] flex items-center justify-center text-[#888] font-mono text-sm">
             S
           </div>
         </div>
 
-        <NavButton to="/" icon={<Code2 />} label="IDE" />
-        <NavButton to="/runner" icon={<Play />} label="Runner" />
+        <NavButton to="/" icon={<Code2 size={18} />} label="IDE" />
+        <NavButton to="/runner" icon={<Play size={18} />} label="Runner" />
 
         <div className="flex-1" />
 
-        <NavButton to="/settings" icon={<Settings />} label="Settings" />
+        <NavButton to="/settings" icon={<Settings size={18} />} label="Settings" />
       </aside>
 
       {/* Main content */}
@@ -54,19 +48,11 @@ function NavButton({
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `w-12 h-12 flex items-center justify-center rounded-lg transition-all ${
+        `w-10 h-10 flex items-center justify-center rounded transition-colors ${
           isActive
-            ? "text-[#00f2fe]"
-            : "text-[#555566] hover:text-[#8888aa] hover:bg-[#1a1a24]"
+            ? "bg-[#333] text-[#d4d4d4]"
+            : "text-[#555] hover:text-[#888] hover:bg-[#2a2a2a]"
         }`
-      }
-      style={({ isActive }) =>
-        isActive
-          ? {
-              background: "linear-gradient(135deg, rgba(0,242,254,0.15) 0%, rgba(255,0,255,0.15) 100%)",
-              boxShadow: "0 0 15px rgba(0,242,254,0.2)",
-            }
-          : undefined
       }
       title={label}
     >

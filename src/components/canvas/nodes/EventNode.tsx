@@ -13,37 +13,33 @@ function EventNode({ data, selected }: NodeProps) {
   const getIcon = () => {
     switch (nodeData.eventType) {
       case "input":
-        return <MessageSquare className="w-4 h-4 text-[#00ff88]" />;
+        return <MessageSquare className="w-3.5 h-3.5 text-[#6b9b6b]" />;
       case "start":
-        return <Play className="w-4 h-4 text-[#00ff88]" />;
+        return <Play className="w-3.5 h-3.5 text-[#6b9b6b]" />;
       case "stop":
-        return <Square className="w-4 h-4 text-[#00ff88]" />;
+        return <Square className="w-3.5 h-3.5 text-[#6b9b6b]" />;
       default:
-        return <Zap className="w-4 h-4 text-[#00ff88]" />;
+        return <Zap className="w-3.5 h-3.5 text-[#6b9b6b]" />;
     }
   };
 
   return (
     <div
-      className={`px-4 py-2 rounded-full border-2 min-w-[140px] backdrop-blur-sm transition-all duration-200 ${
+      className={`px-3 py-1.5 rounded-full border min-w-[120px] transition-colors ${
         selected
-          ? "border-[#00ff88] shadow-[0_0_30px_rgba(0,255,136,0.5)]"
-          : "border-[#00ff88]/50 shadow-[0_0_15px_rgba(0,255,136,0.2)]"
+          ? "border-[#6b9b6b] bg-[#2a2a2a]"
+          : "border-[#444] bg-[#232323] hover:border-[#555]"
       }`}
-      style={{
-        background: "linear-gradient(135deg, rgba(0,255,136,0.15) 0%, rgba(0,255,136,0.05) 100%)",
-      }}
     >
       <Handle
         type="target"
         position={Position.Left}
-        className="!w-3 !h-3 !bg-[#00ff88] !border-2 !border-[#00ff88]/50"
-        style={{ boxShadow: "0 0 8px rgba(0,255,136,0.6)" }}
+        className="!w-2 !h-2 !bg-[#6b9b6b] !border !border-[#444]"
       />
 
-      <div className="flex items-center justify-center gap-2">
+      <div className="flex items-center justify-center gap-1.5">
         {getIcon()}
-        <span className="font-medium text-white text-sm" style={{ textShadow: "0 0 10px rgba(0,255,136,0.5)" }}>
+        <span className="font-medium text-[#d4d4d4] text-xs">
           {nodeData.label}
         </span>
       </div>
@@ -51,8 +47,7 @@ function EventNode({ data, selected }: NodeProps) {
       <Handle
         type="source"
         position={Position.Right}
-        className="!w-3 !h-3 !bg-[#00ff88] !border-2 !border-[#00ff88]/50"
-        style={{ boxShadow: "0 0 8px rgba(0,255,136,0.6)" }}
+        className="!w-2 !h-2 !bg-[#6b9b6b] !border !border-[#444]"
       />
     </div>
   );
