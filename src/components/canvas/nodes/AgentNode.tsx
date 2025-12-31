@@ -8,7 +8,7 @@ interface AgentNodeData {
 }
 
 function AgentNode({ data, selected }: NodeProps) {
-  const nodeData = data as AgentNodeData;
+  const nodeData = data as unknown as AgentNodeData;
 
   return (
     <div

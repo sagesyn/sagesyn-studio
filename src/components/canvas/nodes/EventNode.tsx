@@ -8,7 +8,7 @@ interface EventNodeData {
 }
 
 function EventNode({ data, selected }: NodeProps) {
-  const nodeData = data as EventNodeData;
+  const nodeData = data as unknown as EventNodeData;
 
   const getIcon = () => {
     switch (nodeData.eventType) {

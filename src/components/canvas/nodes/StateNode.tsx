@@ -8,7 +8,7 @@ interface StateNodeData {
 }
 
 function StateNode({ data, selected }: NodeProps) {
-  const nodeData = data as StateNodeData;
+  const nodeData = data as unknown as StateNodeData;
 
   return (
     <div

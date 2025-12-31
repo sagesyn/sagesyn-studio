@@ -54,7 +54,6 @@ export function generateSagCode(
   // Group nodes by type
   const agents = nodes.filter((n) => n.type === "agent");
   const tools = nodes.filter((n) => n.type === "tool");
-  const events = nodes.filter((n) => n.type === "event");
   const states = nodes.filter((n) => n.type === "state");
 
   // Build agent-to-children mapping from edges
@@ -106,7 +105,7 @@ export function generateSagCode(
   agents.forEach((agent, index) => {
     if (index > 0) lines.push("");
 
-    const data = agent.data as AgentData;
+    const data = agent.data as unknown as AgentData;
     const children = agentChildren.get(agent.id);
 
     lines.push(`agent ${data.label} {`);
@@ -132,7 +131,7 @@ export function generateSagCode(
     if (children?.state) {
       const stateNode = nodes.find((n) => n.id === children.state);
       if (stateNode) {
-        const stateData = stateNode.data as StateData;
+        const stateData = stateNode.data as unknown as StateData;
         if (stateData.fields && stateData.fields.length > 0) {
           lines.push("");
           lines.push("  state {");
@@ -149,7 +148,7 @@ export function generateSagCode(
       children.tools.forEach((toolId) => {
         const toolNode = nodes.find((n) => n.id === toolId);
         if (toolNode) {
-          const toolData = toolNode.data as ToolData;
+          const toolData = toolNode.data as unknown as ToolData;
           lines.push("");
 
           const params = toolData.params || "";
@@ -170,7 +169,7 @@ export function generateSagCode(
       children.events.forEach((eventId) => {
         const eventNode = nodes.find((n) => n.id === eventId);
         if (eventNode) {
-          const eventData = eventNode.data as EventData;
+          const eventData = eventNode.data as unknown as EventData;
           lines.push("");
           lines.push(`  on ${eventData.label} {`);
           lines.push("    // TODO: Implement event handler");
@@ -223,7 +222,7 @@ export function generateSagCode(
 
   const orphanStates = states.filter((s) => !connectedStates.has(s.id));
   orphanStates.forEach((stateNode) => {
-    const stateData = stateNode.data as StateData;
+    const stateData = stateNode.data as unknown as StateData;
     if (stateData.fields && stateData.fields.length > 0) {
       lines.push("");
       lines.push(`type ${stateData.label || "CustomState"} {`);

@@ -9,7 +9,7 @@ interface ToolNodeData {
 }
 
 function ToolNode({ data, selected }: NodeProps) {
-  const nodeData = data as ToolNodeData;
+  const nodeData = data as unknown as ToolNodeData;
 
   return (
     <div
