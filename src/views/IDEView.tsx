@@ -146,7 +146,7 @@ export default function IDEView() {
           {/* Workflow Canvas */}
           {(viewMode === "canvas" || viewMode === "split") && (
             <div className={viewMode === "split" ? "w-1/2" : "flex-1"}>
-              <WorkflowCanvas />
+              <WorkflowCanvas code={code} />
             </div>
           )}
         </div>

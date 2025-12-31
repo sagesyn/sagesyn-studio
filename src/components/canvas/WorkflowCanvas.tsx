@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useEffect, useMemo } from "react";
 import {
   ReactFlow,
   Background,
@@ -20,6 +20,11 @@ import ToolNode from "./nodes/ToolNode";
 import EventNode from "./nodes/EventNode";
 import StateNode from "./nodes/StateNode";
 import NodePalette from "./NodePalette";
+import { parseSagCode, generateNodesFromParsed } from "../../lib/sagParser";
+
+interface WorkflowCanvasProps {
+  code?: string;
+}
 
 // Custom node types
 const nodeTypes = {
@@ -29,8 +34,8 @@ const nodeTypes = {
   state: StateNode,
 };
 
-// Initial nodes for demo
-const initialNodes: Node[] = [
+// Fallback nodes when no code is provided
+const defaultNodes: Node[] = [
   {
     id: "agent-1",
     type: "agent",
@@ -44,41 +49,60 @@ const initialNodes: Node[] = [
     data: { label: "get_weather", params: "city: string", returns: "WeatherData" },
   },
   {
-    id: "tool-2",
-    type: "tool",
-    position: { x: 400, y: 300 },
-    data: { label: "format_response", params: "data: WeatherData", returns: "string" },
-  },
-  {
     id: "event-1",
     type: "event",
     position: { x: 250, y: 500 },
     data: { label: "user_message", eventType: "input" },
   },
-  {
-    id: "state-1",
-    type: "state",
-    position: { x: 500, y: 100 },
-    data: { label: "State", fields: ["lastCity?: string", "requestCount: number"] },
-  },
 ];
 
-// Initial edges
-const initialEdges: Edge[] = [
+const defaultEdges: Edge[] = [
   { id: "e1-1", source: "agent-1", target: "tool-1", animated: true },
-  { id: "e1-2", source: "agent-1", target: "tool-2", animated: true },
   { id: "e1-3", source: "event-1", target: "agent-1", animated: true, style: { stroke: "#22c55e" } },
-  { id: "e1-4", source: "agent-1", target: "state-1", style: { stroke: "#f59e0b", strokeDasharray: "5,5" } },
 ];
 
 let id = 0;
 const getId = () => `node_${id++}`;
 
-function Flow() {
+// Get edge style based on node types
+function getEdgeStyle(source: string, target: string) {
+  if (source.startsWith("event-") || target.startsWith("event-")) {
+    return { stroke: "#22c55e" };
+  }
+  if (source.startsWith("state-") || target.startsWith("state-")) {
+    return { stroke: "#f59e0b", strokeDasharray: "5,5" };
+  }
+  return { stroke: "#6b7280" };
+}
+
+function Flow({ code }: { code?: string }) {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const { screenToFlowPosition } = useReactFlow();
+  const [nodes, setNodes, onNodesChange] = useNodesState(defaultNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(defaultEdges);
+  const { screenToFlowPosition, fitView } = useReactFlow();
+
+  // Parse code and generate nodes when code changes
+  const parsedWorkflow = useMemo(() => {
+    if (!code) return null;
+    const parsed = parseSagCode(code);
+    return generateNodesFromParsed(parsed);
+  }, [code]);
+
+  // Update nodes/edges when parsed workflow changes
+  useEffect(() => {
+    if (parsedWorkflow) {
+      setNodes(parsedWorkflow.nodes as Node[]);
+      setEdges(
+        parsedWorkflow.edges.map((e) => ({
+          ...e,
+          animated: true,
+          style: getEdgeStyle(e.source, e.target),
+        })) as Edge[]
+      );
+      // Fit view after updating nodes
+      setTimeout(() => fitView({ padding: 0.2 }), 50);
+    }
+  }, [parsedWorkflow, setNodes, setEdges, fitView]);
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge({ ...params, animated: true }, eds)),
@@ -174,10 +198,10 @@ function getDefaultNodeData(type: string) {
   }
 }
 
-export default function WorkflowCanvas() {
+export default function WorkflowCanvas({ code }: WorkflowCanvasProps) {
   return (
     <ReactFlowProvider>
-      <Flow />
+      <Flow code={code} />
     </ReactFlowProvider>
   );
 }
