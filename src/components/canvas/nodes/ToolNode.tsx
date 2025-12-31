@@ -13,29 +13,37 @@ function ToolNode({ data, selected }: NodeProps) {
 
   return (
     <div
-      className={`px-4 py-3 rounded-lg bg-gradient-to-br from-blue-600 to-blue-800 border-2 min-w-[160px] shadow-lg ${
-        selected ? "border-white" : "border-blue-400"
+      className={`px-4 py-3 rounded-lg border-2 min-w-[160px] backdrop-blur-sm transition-all duration-200 ${
+        selected
+          ? "border-[#ff00ff] shadow-[0_0_30px_rgba(255,0,255,0.5)]"
+          : "border-[#ff00ff]/50 shadow-[0_0_15px_rgba(255,0,255,0.2)]"
       }`}
+      style={{
+        background: "linear-gradient(135deg, rgba(255,0,255,0.15) 0%, rgba(255,0,255,0.05) 100%)",
+      }}
     >
       <Handle
         type="target"
         position={Position.Top}
-        className="!w-3 !h-3 !bg-blue-300 !border-2 !border-blue-600"
+        className="!w-3 !h-3 !bg-[#ff00ff] !border-2 !border-[#ff00ff]/50"
+        style={{ boxShadow: "0 0 8px rgba(255,0,255,0.6)" }}
       />
 
       <div className="flex items-center gap-2 mb-1">
-        <Wrench className="w-4 h-4 text-blue-200" />
-        <span className="font-semibold text-white text-sm">{nodeData.label}</span>
+        <Wrench className="w-4 h-4 text-[#ff00ff]" />
+        <span className="font-semibold text-white text-sm" style={{ textShadow: "0 0 10px rgba(255,0,255,0.5)" }}>
+          {nodeData.label}
+        </span>
       </div>
 
       {nodeData.params && (
-        <div className="text-xs text-blue-200 font-mono opacity-80">
+        <div className="text-xs text-[#ff00ff]/70 font-mono">
           ({nodeData.params})
         </div>
       )}
 
       {nodeData.returns && (
-        <div className="text-xs text-blue-300 font-mono mt-1">
+        <div className="text-xs text-[#ff00ff]/90 font-mono mt-1">
           → {nodeData.returns}
         </div>
       )}
@@ -43,7 +51,8 @@ function ToolNode({ data, selected }: NodeProps) {
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!w-3 !h-3 !bg-blue-300 !border-2 !border-blue-600"
+        className="!w-3 !h-3 !bg-[#ff00ff] !border-2 !border-[#ff00ff]/50"
+        style={{ boxShadow: "0 0 8px rgba(255,0,255,0.6)" }}
       />
     </div>
   );

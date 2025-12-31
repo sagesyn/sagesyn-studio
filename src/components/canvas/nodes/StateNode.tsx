@@ -12,19 +12,27 @@ function StateNode({ data, selected }: NodeProps) {
 
   return (
     <div
-      className={`px-4 py-3 rounded-lg bg-gradient-to-br from-amber-600 to-amber-800 border-2 min-w-[150px] shadow-lg ${
-        selected ? "border-white" : "border-amber-400"
+      className={`px-4 py-3 rounded-lg border-2 min-w-[150px] backdrop-blur-sm transition-all duration-200 ${
+        selected
+          ? "border-[#ff6b35] shadow-[0_0_30px_rgba(255,107,53,0.5)]"
+          : "border-[#ff6b35]/50 shadow-[0_0_15px_rgba(255,107,53,0.2)]"
       }`}
+      style={{
+        background: "linear-gradient(135deg, rgba(255,107,53,0.15) 0%, rgba(255,107,53,0.05) 100%)",
+      }}
     >
       <Handle
         type="target"
         position={Position.Left}
-        className="!w-3 !h-3 !bg-amber-300 !border-2 !border-amber-600"
+        className="!w-3 !h-3 !bg-[#ff6b35] !border-2 !border-[#ff6b35]/50"
+        style={{ boxShadow: "0 0 8px rgba(255,107,53,0.6)" }}
       />
 
       <div className="flex items-center gap-2 mb-2">
-        <Database className="w-4 h-4 text-amber-200" />
-        <span className="font-semibold text-white text-sm">{nodeData.label}</span>
+        <Database className="w-4 h-4 text-[#ff6b35]" />
+        <span className="font-semibold text-white text-sm" style={{ textShadow: "0 0 10px rgba(255,107,53,0.5)" }}>
+          {nodeData.label}
+        </span>
       </div>
 
       {nodeData.fields && nodeData.fields.length > 0 && (
@@ -32,7 +40,7 @@ function StateNode({ data, selected }: NodeProps) {
           {nodeData.fields.map((field, index) => (
             <div
               key={index}
-              className="text-xs text-amber-200 font-mono bg-amber-900/50 px-2 py-0.5 rounded"
+              className="text-xs text-[#ff6b35]/80 font-mono bg-[#ff6b35]/10 px-2 py-0.5 rounded border border-[#ff6b35]/20"
             >
               {field}
             </div>
@@ -43,7 +51,8 @@ function StateNode({ data, selected }: NodeProps) {
       <Handle
         type="source"
         position={Position.Right}
-        className="!w-3 !h-3 !bg-amber-300 !border-2 !border-amber-600"
+        className="!w-3 !h-3 !bg-[#ff6b35] !border-2 !border-[#ff6b35]/50"
+        style={{ boxShadow: "0 0 8px rgba(255,107,53,0.6)" }}
       />
     </div>
   );

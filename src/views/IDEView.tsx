@@ -89,13 +89,13 @@ export default function IDEView() {
   }, []);
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full bg-[#0a0a0f]">
       {/* File Explorer */}
-      <div className="w-56 bg-gray-900 border-r border-gray-800 flex flex-col">
-        <div className="p-3 border-b border-gray-800 flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-300">Explorer</span>
-          <button className="p-1 hover:bg-gray-800 rounded">
-            <Plus className="w-4 h-4 text-gray-400" />
+      <div className="w-56 bg-[#12121a] border-r border-[#2a2a3a] flex flex-col">
+        <div className="p-3 border-b border-[#2a2a3a] flex items-center justify-between">
+          <span className="text-sm font-medium text-[#8888aa]">Explorer</span>
+          <button className="p-1 hover:bg-[#1a1a24] rounded transition-colors">
+            <Plus className="w-4 h-4 text-[#555566]" />
           </button>
         </div>
 
@@ -119,9 +119,9 @@ export default function IDEView() {
       {/* Main Editor/Canvas Area */}
       <div className="flex-1 flex flex-col">
         {/* Toolbar */}
-        <div className="h-12 bg-gray-900 border-b border-gray-800 flex items-center px-4 gap-2">
+        <div className="h-12 bg-[#12121a] border-b border-[#2a2a3a] flex items-center px-4 gap-2">
           {/* View Mode Tabs */}
-          <div className="flex bg-gray-800 rounded-lg p-1">
+          <div className="flex bg-[#1a1a24] rounded-lg p-1">
             <ViewTab
               active={viewMode === "code"}
               onClick={() => setViewMode("code")}
@@ -147,27 +147,33 @@ export default function IDEView() {
             />
           </div>
 
-          <div className="w-px h-6 bg-gray-700 mx-2" />
+          <div className="w-px h-6 bg-[#2a2a3a] mx-2" />
 
-          <button className="flex items-center gap-2 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 rounded text-sm">
+          <button className="flex items-center gap-2 px-3 py-1.5 bg-[#1a1a24] hover:bg-[#2a2a3a] border border-[#2a2a3a] rounded text-sm text-[#8888aa] hover:text-white transition-all">
             <Save className="w-4 h-4" />
             Save
           </button>
-          <button className="flex items-center gap-2 px-3 py-1.5 bg-purple-600 hover:bg-purple-500 rounded text-sm">
+          <button
+            className="flex items-center gap-2 px-3 py-1.5 rounded text-sm text-white transition-all hover:scale-[1.02]"
+            style={{
+              background: "linear-gradient(135deg, #00f2fe 0%, #ff00ff 100%)",
+              boxShadow: "0 0 20px rgba(0,242,254,0.3), 0 0 20px rgba(255,0,255,0.3)",
+            }}
+          >
             <Play className="w-4 h-4" />
             Compile
           </button>
 
           <div className="flex-1" />
 
-          <span className="text-sm text-gray-400">{activeFile}</span>
+          <span className="text-sm text-[#555566]">{activeFile}</span>
         </div>
 
         {/* Content Area */}
         <div className="flex-1 flex">
           {/* Code Editor */}
           {(viewMode === "code" || viewMode === "split") && (
-            <div className={viewMode === "split" ? "w-1/2 border-r border-gray-800" : "flex-1"}>
+            <div className={viewMode === "split" ? "w-1/2 border-r border-[#2a2a3a]" : "flex-1"}>
               <Editor
                 height="100%"
                 defaultLanguage="typescript"
@@ -190,7 +196,7 @@ export default function IDEView() {
 
           {/* Workflow Canvas */}
           {(viewMode === "canvas" || viewMode === "split") && (
-            <div className={viewMode === "split" ? "w-1/2" : "flex-1"}>
+            <div className={`${viewMode === "split" ? "w-1/2" : "flex-1"} bg-grid`}>
               <WorkflowCanvas code={code} onWorkflowChange={handleWorkflowChange} />
             </div>
           )}
@@ -198,24 +204,30 @@ export default function IDEView() {
       </div>
 
       {/* Right Panel - Output */}
-      <div className="w-72 bg-gray-900 border-l border-gray-800 flex flex-col">
-        <div className="p-3 border-b border-gray-800">
-          <span className="text-sm font-medium text-gray-300">Output</span>
+      <div className="w-72 bg-[#12121a] border-l border-[#2a2a3a] flex flex-col">
+        <div className="p-3 border-b border-[#2a2a3a]">
+          <span className="text-sm font-medium text-[#8888aa]">Output</span>
         </div>
-        <div className="flex-1 p-4 text-sm text-gray-400 overflow-y-auto">
+        <div className="flex-1 p-4 text-sm text-[#555566] overflow-y-auto">
           <p className="mb-4">Compile your agent to see the generated code.</p>
 
-          <div className="bg-gray-800 rounded-lg p-3 mb-3">
-            <div className="text-xs text-gray-500 mb-1">Status</div>
+          <div className="bg-[#1a1a24] rounded-lg p-3 mb-3 border border-[#2a2a3a]">
+            <div className="text-xs text-[#555566] mb-1">Status</div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full" />
-              <span className="text-green-400">Ready</span>
+              <div
+                className="w-2 h-2 rounded-full"
+                style={{
+                  backgroundColor: "#00ff88",
+                  boxShadow: "0 0 8px rgba(0,255,136,0.6)"
+                }}
+              />
+              <span className="text-[#00ff88]">Ready</span>
             </div>
           </div>
 
-          <div className="bg-gray-800 rounded-lg p-3">
-            <div className="text-xs text-gray-500 mb-1">Target</div>
-            <select className="w-full bg-gray-700 border border-gray-600 rounded px-2 py-1 text-sm">
+          <div className="bg-[#1a1a24] rounded-lg p-3 border border-[#2a2a3a]">
+            <div className="text-xs text-[#555566] mb-1">Target</div>
+            <select className="w-full bg-[#0a0a0f] border border-[#2a2a3a] rounded px-2 py-1 text-sm text-[#8888aa] focus:border-[#00f2fe] focus:outline-none transition-colors">
               <option value="typescript">TypeScript</option>
               <option value="python">Python</option>
               <option value="go">Go</option>
@@ -241,11 +253,15 @@ function ViewTab({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-1.5 px-3 py-1 rounded text-sm transition-colors ${
+      className={`flex items-center gap-1.5 px-3 py-1 rounded text-sm transition-all ${
         active
-          ? "bg-purple-600 text-white"
-          : "text-gray-400 hover:text-white"
+          ? "text-white"
+          : "text-[#555566] hover:text-[#8888aa]"
       }`}
+      style={active ? {
+        background: "linear-gradient(135deg, rgba(0,242,254,0.2) 0%, rgba(255,0,255,0.2) 100%)",
+        boxShadow: "0 0 15px rgba(0,242,254,0.2)",
+      } : undefined}
     >
       {icon}
       {label}
@@ -265,11 +281,15 @@ function FileItem({
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-2 px-2 py-1.5 rounded text-sm ${
+      className={`w-full flex items-center gap-2 px-2 py-1.5 rounded text-sm transition-all ${
         active
-          ? "bg-purple-600/20 text-purple-300"
-          : "text-gray-400 hover:bg-gray-800"
+          ? "text-[#00f2fe]"
+          : "text-[#555566] hover:text-[#8888aa] hover:bg-[#1a1a24]"
       }`}
+      style={active ? {
+        background: "linear-gradient(135deg, rgba(0,242,254,0.1) 0%, rgba(0,242,254,0.05) 100%)",
+        boxShadow: "0 0 10px rgba(0,242,254,0.1)",
+      } : undefined}
     >
       <File className="w-4 h-4" />
       {name}
@@ -279,7 +299,7 @@ function FileItem({
 
 function FolderItem({ name }: { name: string }) {
   return (
-    <div className="flex items-center gap-2 px-2 py-1.5 text-sm text-gray-400">
+    <div className="flex items-center gap-2 px-2 py-1.5 text-sm text-[#555566]">
       <FolderOpen className="w-4 h-4" />
       {name}
     </div>

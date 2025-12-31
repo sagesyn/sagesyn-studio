@@ -1,16 +1,24 @@
 import { Routes, Route, NavLink } from "react-router-dom";
-import { Code2, Play, Settings, Boxes } from "lucide-react";
+import { Code2, Play, Settings } from "lucide-react";
 import IDEView from "./views/IDEView";
 import RunnerView from "./views/RunnerView";
 import SettingsView from "./views/SettingsView";
 
 function App() {
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-[#0a0a0f]">
       {/* Sidebar */}
-      <aside className="w-16 bg-gray-900 border-r border-gray-800 flex flex-col items-center py-4 gap-2">
+      <aside className="w-16 bg-[#12121a] border-r border-[#2a2a3a] flex flex-col items-center py-4 gap-2">
         <div className="mb-4">
-          <Boxes className="w-8 h-8 text-purple-500" />
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg"
+            style={{
+              background: "linear-gradient(135deg, #00f2fe 0%, #ff00ff 100%)",
+              boxShadow: "0 0 20px rgba(0,242,254,0.3), 0 0 20px rgba(255,0,255,0.3)",
+            }}
+          >
+            S
+          </div>
         </div>
 
         <NavButton to="/" icon={<Code2 />} label="IDE" />
@@ -46,11 +54,19 @@ function NavButton({
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `w-12 h-12 flex items-center justify-center rounded-lg transition-colors ${
+        `w-12 h-12 flex items-center justify-center rounded-lg transition-all ${
           isActive
-            ? "bg-purple-600 text-white"
-            : "text-gray-400 hover:bg-gray-800 hover:text-white"
+            ? "text-[#00f2fe]"
+            : "text-[#555566] hover:text-[#8888aa] hover:bg-[#1a1a24]"
         }`
+      }
+      style={({ isActive }) =>
+        isActive
+          ? {
+              background: "linear-gradient(135deg, rgba(0,242,254,0.15) 0%, rgba(255,0,255,0.15) 100%)",
+              boxShadow: "0 0 15px rgba(0,242,254,0.2)",
+            }
+          : undefined
       }
       title={label}
     >
