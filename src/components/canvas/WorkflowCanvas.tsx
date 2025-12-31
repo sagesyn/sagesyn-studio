@@ -24,6 +24,7 @@ import { parseSagCode, generateNodesFromParsed } from "../../lib/sagParser";
 
 interface WorkflowCanvasProps {
   code?: string;
+  onWorkflowChange?: (nodes: Node[], edges: Edge[]) => void;
 }
 
 // Custom node types
@@ -75,11 +76,16 @@ function getEdgeStyle(source: string, target: string) {
   return { stroke: "#6b7280" };
 }
 
-function Flow({ code }: { code?: string }) {
+function Flow({ code, onWorkflowChange }: { code?: string; onWorkflowChange?: (nodes: Node[], edges: Edge[]) => void }) {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(defaultNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(defaultEdges);
   const { screenToFlowPosition, fitView } = useReactFlow();
+
+  // Track if we're currently syncing from code to prevent loops
+  const isSyncingFromCode = useRef(false);
+  // Track the last code we synced from
+  const lastSyncedCode = useRef<string | null>(null);
 
   // Parse code and generate nodes when code changes
   const parsedWorkflow = useMemo(() => {
@@ -90,7 +96,10 @@ function Flow({ code }: { code?: string }) {
 
   // Update nodes/edges when parsed workflow changes
   useEffect(() => {
-    if (parsedWorkflow) {
+    if (parsedWorkflow && code !== lastSyncedCode.current) {
+      isSyncingFromCode.current = true;
+      lastSyncedCode.current = code || null;
+
       setNodes(parsedWorkflow.nodes as Node[]);
       setEdges(
         parsedWorkflow.edges.map((e) => ({
@@ -100,13 +109,51 @@ function Flow({ code }: { code?: string }) {
         })) as Edge[]
       );
       // Fit view after updating nodes
-      setTimeout(() => fitView({ padding: 0.2 }), 50);
+      setTimeout(() => {
+        fitView({ padding: 0.2 });
+        isSyncingFromCode.current = false;
+      }, 50);
     }
-  }, [parsedWorkflow, setNodes, setEdges, fitView]);
+  }, [parsedWorkflow, code, setNodes, setEdges, fitView]);
+
+  // Notify parent when workflow changes from user interaction
+  const handleNodesChange = useCallback(
+    (changes: Parameters<typeof onNodesChange>[0]) => {
+      onNodesChange(changes);
+      // Only notify if change was from user, not code sync
+      if (!isSyncingFromCode.current && onWorkflowChange) {
+        // Defer to next tick to get updated nodes
+        setTimeout(() => {
+          onWorkflowChange(nodes, edges);
+        }, 0);
+      }
+    },
+    [onNodesChange, onWorkflowChange, nodes, edges]
+  );
+
+  const handleEdgesChange = useCallback(
+    (changes: Parameters<typeof onEdgesChange>[0]) => {
+      onEdgesChange(changes);
+      if (!isSyncingFromCode.current && onWorkflowChange) {
+        setTimeout(() => {
+          onWorkflowChange(nodes, edges);
+        }, 0);
+      }
+    },
+    [onEdgesChange, onWorkflowChange, nodes, edges]
+  );
 
   const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge({ ...params, animated: true }, eds)),
-    [setEdges]
+    (params: Connection) => {
+      setEdges((eds) => {
+        const newEdges = addEdge({ ...params, animated: true }, eds);
+        if (onWorkflowChange && !isSyncingFromCode.current) {
+          setTimeout(() => onWorkflowChange(nodes, newEdges), 0);
+        }
+        return newEdges;
+      });
+    },
+    [setEdges, onWorkflowChange, nodes]
   );
 
   const onDragOver = useCallback((event: React.DragEvent) => {
@@ -133,9 +180,15 @@ function Flow({ code }: { code?: string }) {
         data: getDefaultNodeData(type),
       };
 
-      setNodes((nds) => nds.concat(newNode));
+      setNodes((nds) => {
+        const newNodes = nds.concat(newNode);
+        if (onWorkflowChange && !isSyncingFromCode.current) {
+          setTimeout(() => onWorkflowChange(newNodes, edges), 0);
+        }
+        return newNodes;
+      });
     },
-    [screenToFlowPosition, setNodes]
+    [screenToFlowPosition, setNodes, onWorkflowChange, edges]
   );
 
   return (
@@ -145,8 +198,8 @@ function Flow({ code }: { code?: string }) {
         <ReactFlow
           nodes={nodes}
           edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
+          onNodesChange={handleNodesChange}
+          onEdgesChange={handleEdgesChange}
           onConnect={onConnect}
           onDrop={onDrop}
           onDragOver={onDragOver}
@@ -198,10 +251,10 @@ function getDefaultNodeData(type: string) {
   }
 }
 
-export default function WorkflowCanvas({ code }: WorkflowCanvasProps) {
+export default function WorkflowCanvas({ code, onWorkflowChange }: WorkflowCanvasProps) {
   return (
     <ReactFlowProvider>
-      <Flow code={code} />
+      <Flow code={code} onWorkflowChange={onWorkflowChange} />
     </ReactFlowProvider>
   );
 }

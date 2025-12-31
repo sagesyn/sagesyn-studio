@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useCallback, useRef } from "react";
 import { File, FolderOpen, Plus, Save, Play, Code2, GitBranch } from "lucide-react";
 import Editor from "@monaco-editor/react";
+import { Node, Edge } from "@xyflow/react";
 import WorkflowCanvas from "../components/canvas/WorkflowCanvas";
+import { generateSagCode, WorkflowNode, WorkflowEdge } from "../lib/sagGenerator";
 
 // Sample .sag code
 const SAMPLE_CODE = `agent WeatherAgent {
@@ -42,6 +44,49 @@ export default function IDEView() {
   const [code, setCode] = useState(SAMPLE_CODE);
   const [activeFile, setActiveFile] = useState("weather-agent.sag");
   const [viewMode, setViewMode] = useState<ViewMode>("split");
+
+  // Track sync source to prevent loops
+  const syncSource = useRef<"code" | "canvas" | null>(null);
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Handle code changes from editor
+  const handleCodeChange = useCallback((value: string | undefined) => {
+    if (syncSource.current === "canvas") {
+      syncSource.current = null;
+      return;
+    }
+    syncSource.current = "code";
+    setCode(value || "");
+    // Reset sync source after a delay
+    setTimeout(() => {
+      syncSource.current = null;
+    }, 100);
+  }, []);
+
+  // Handle workflow changes from canvas
+  const handleWorkflowChange = useCallback((nodes: Node[], edges: Edge[]) => {
+    if (syncSource.current === "code") {
+      return;
+    }
+
+    // Debounce to avoid rapid updates
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    debounceTimer.current = setTimeout(() => {
+      syncSource.current = "canvas";
+      const generatedCode = generateSagCode(
+        nodes as unknown as WorkflowNode[],
+        edges as unknown as WorkflowEdge[]
+      );
+      setCode(generatedCode);
+      // Reset sync source after a delay
+      setTimeout(() => {
+        syncSource.current = null;
+      }, 100);
+    }, 300);
+  }, []);
 
   return (
     <div className="flex h-full">
@@ -128,7 +173,7 @@ export default function IDEView() {
                 defaultLanguage="typescript"
                 theme="vs-dark"
                 value={code}
-                onChange={(value) => setCode(value || "")}
+                onChange={handleCodeChange}
                 options={{
                   fontSize: 14,
                   fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
@@ -146,7 +191,7 @@ export default function IDEView() {
           {/* Workflow Canvas */}
           {(viewMode === "canvas" || viewMode === "split") && (
             <div className={viewMode === "split" ? "w-1/2" : "flex-1"}>
-              <WorkflowCanvas code={code} />
+              <WorkflowCanvas code={code} onWorkflowChange={handleWorkflowChange} />
             </div>
           )}
         </div>
